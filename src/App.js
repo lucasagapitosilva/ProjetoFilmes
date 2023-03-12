@@ -1,9 +1,9 @@
-import './App.css';
+import Rotas from './routes';
 
 function App() {
   return (
-    <div className="container">
-      <h1>ola</h1>
+    <div className="app">
+      <Rotas/>
     </div>
   );
 }
