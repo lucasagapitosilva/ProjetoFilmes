@@ -9,6 +9,7 @@ import './style.css'
 export default function Home(){
 
     const [filmes, setFilmes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -27,7 +28,16 @@ export default function Home(){
         }
 
         loadFilmes();
+        setLoading(false);
     }, []);
+
+    if(loading){
+        return(
+            <div className="loading">
+                <h2>Carregando filmes...</h2>
+            </div>
+        )
+    }
 
     return(
         <div className="container">
