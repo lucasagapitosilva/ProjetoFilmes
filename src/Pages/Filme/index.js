@@ -1,51 +1,54 @@
-import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../Services/api';
 import './style.css'
 
-export default function Filme(){
+export default function Filme() {
 
-    const {id} = useParams();
+    const { id } = useParams();
     const [filme, setFilme] = useState({});
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
-    useEffect(()=>{
-        async function loadFilme(){
+    useEffect(() => {
+        async function loadFilme() {
             await api.get(`/movie/${id}`, {
                 params: {
                     api_key: "fcd0af7da8afc0e1599c2c3b6e0f64c7",
                     language: "pt-BR",
                 }
             })
-            .then((response) => {
-                setFilme(response.data);
-                setLoading(false);
-            })
-            .catch(()=>{
-                console.log("Filme não encontrado!")
-            })
+                .then((response) => {
+                    setFilme(response.data);
+                    setLoading(false);
+                })
+                .catch(() => {
+                    console.log("Filme não encontrado!")
+                    navigate("/", { replace: true });
+                    return;
+                })
         }
 
         loadFilme()
 
-        return() => {
+        return () => {
             console.log("desmontado")
         }
-    },[]);
+    }, [navigate, id]);
 
-    if(loading){
-        return(
+    if (loading) {
+        return (
             <div className="filme-info">
                 <h1>Carregando detalhes...</h1>
             </div>
         )
     }
 
-    return(
+    return (
         <div className="filme-info">
             <h1>{filme.title}</h1>
             <img src={`https://image.tmdb.org/t/p/original/${filme.backdrop_path}`} alt={filme.title} />
-            
+
             <h3>Sinopse</h3>
             <span>{filme.overview}</span>
             <strong>Avalianção: {filme.vote_average.toFixed(1)} / 10</strong>
@@ -53,7 +56,7 @@ export default function Filme(){
             <div className="area-buttons">
                 <button>Salvar</button>
                 <button>
-                    <a href="#">Trailer</a>
+                    <a target="blank" rel="external" href={`https://youtube.com/results?search_query=${filme.title} Trailer`}>Trailer</a>
                 </button>
             </div>
         </div>
